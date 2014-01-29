@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   include ApplicationHelper # Para usar helper methods nos controllers
 
   protect_from_forgery
-  before_filter :set_tld_length
+  before_filter :set_tld_length, :verify_protocol
   before_filter :set_contrast, :set_locale, :set_global_vars, :set_view_types
   before_filter :require_user, only: [:admin]
   after_filter :weby_clear, :count_view
@@ -106,6 +106,12 @@ class ApplicationController < ActionController::Base
       if Weby::Settings.domain.present? and !(request.domain.match(Weby::Settings.domain))
         request.session_options[:tld_length] = current_site.domain.split(".").length + 1 if current_site.domain
       end
+    end
+  end
+
+  def verify_protocol
+    if current_user && Weby::Settings.login_protocol == 'https' && request.protocol != Weby::Settings.login_protocol
+      redirect_to "https://"+request.host_with_port+request.fullpath
     end
   end
 
