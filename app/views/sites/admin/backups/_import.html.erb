@@ -5,7 +5,7 @@
         <th>
           <%= form_tag site_admin_import_path, multipart: true, method: :post do %>
              <%= file_field_tag 'upload' %>
-             <%= submit_tag t('import'), class: 'btn btn-primary import' %>
+             <%= submit_tag t('import'), class: 'btn btn-default btn-primary import' %>
           <% end %>
         </th>
       </tr>
